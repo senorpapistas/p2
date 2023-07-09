@@ -22,7 +22,10 @@ def traverse_nodes(node, board, state, identity):
     while not board.is_ended(state):
         if node is None:
             return -1
-    pass
+        action = choice(node.untried_actions)
+        state = board.next_state(state, action)
+        node = node.child_nodes[action]
+    return node
     # Hint: return leaf_node
 
 
@@ -37,7 +40,14 @@ def expand_leaf(node, board, state):
     Returns:    The added child node.
 
     """
-    pass
+    action = choice(node.untried_actions)
+    new_state = board.next_state(state, action)
+    added_child = MCTSNode(parent = node, parent_action = action, action_list=board.legal_actions(new_state))
+    node.child_nodes[action] = added_child
+    node.untried_actions.remove(action)
+    return added_child
+
+
     # Hint: return new_node
 
 
