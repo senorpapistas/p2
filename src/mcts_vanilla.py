@@ -94,15 +94,22 @@ def think(board, state):
     identity_of_bot = board.current_player(state)
     root_node = MCTSNode(parent=None, parent_action=None, action_list=board.legal_actions(state))
 
-    for step in range(num_nodes):
+    while not board.is_ended(state):
         # Copy the game for sampling a playthrough
         sampled_game = state
 
         # Start at root
         node = root_node
-
+        new_node = traverse_nodes(node, board, sampled_game, identity_of_bot)
+        if len(new_node.untried_actions) > 0:
+            new_node = expand_leaf(new_node, board, sampled_game)
+        sampled_game = board.next_state(sampled_game, node.parent_action)
+        rollout_rest = rollout(board, sampled_game)
+        win_rate = board.points_values(rollout_rest)[identity_of_bot] == 1
+        backpropagate(new_node, win_rate) 
         # Do MCTS - This is all you!
 
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    return None
+    best_win_rate = max(root_node.child_nodes.values())
+    return best_win_rate
