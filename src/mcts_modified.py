@@ -49,7 +49,10 @@ def rollout(board, state):
         state:  The state of the game.
 
     """
-    pass
+    while not board.is_ended(state):
+        action = choice(board.legal_actions(state))
+        state = board.next_state(state,action)
+    return state
 
 
 def backpropagate(node, won):
@@ -65,7 +68,6 @@ def backpropagate(node, won):
         if won:
             node.wins = node.wins + 1
         node = node.parent
-    pass
 
 
 def think(board, state):
