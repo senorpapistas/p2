@@ -19,6 +19,9 @@ def traverse_nodes(node, board, state, identity):
 
     """
     # test 
+    while not board.is_ended(state):
+        if node is None:
+            return -1
     pass
     # Hint: return leaf_node
 
@@ -57,6 +60,11 @@ def backpropagate(node, won):
         won:    An indicator of whether the bot won or lost the game.
 
     """
+    while node is not None:
+        node.visits = node.visits + 1
+        if won:
+            node.wins = node.wins + 1
+        node = node.parent
     pass
 
 
