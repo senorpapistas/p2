@@ -18,14 +18,15 @@ def traverse_nodes(node, board, state, identity):
     Returns:        A node from which the next stage of the search can proceed.
 
     """
-    # test 
-    while not board.is_ended(state):
+    while node.child_nodes:
         if node is None:
             return -1
-        action = choice(node.untried_actions)
+        action = choice(list(node.child_nodes.keys()))
         state = board.next_state(state, action)
-        node = node.child_nodes[action]
+        if action is not None and node.child_nodes:
+            node = node.child_nodes[action]
     return node
+    pass
     # Hint: return leaf_node
 
 
@@ -94,16 +95,32 @@ def think(board, state):
     """
     identity_of_bot = board.current_player(state)
     root_node = MCTSNode(parent=None, parent_action=None, action_list=board.legal_actions(state))
-
-    for step in range(num_nodes):
-        # Copy the game for sampling a playthrough
+    i = 0 # testing value for number of nodes
+    while not board.is_ended(state):
         sampled_game = state
 
         # Start at root
         node = root_node
-
+        if (i > 50):
+            print(node.tree_to_string(horizon=4))
+            break
+        new_node = traverse_nodes(node, board, sampled_game, identity_of_bot)
+        if len(new_node.untried_actions) > 0:
+            new_node = expand_leaf(new_node, board, sampled_game)
+        sampled_game = board.next_state(sampled_game, node.parent_action)
+        rollout_rest = rollout(board, sampled_game)
+        win_rate = board.points_values(rollout_rest)[identity_of_bot] == 1
+        backpropagate(new_node, win_rate)
+        i += 1
         # Do MCTS - This is all you!
-
+    best_move = None
+    best_win_rate = -1.0
+    for child_action, child_node in root_node.child_nodes.items():
+        win_rate = child_node.wins / child_node.visits
+        if win_rate > best_win_rate:
+            best_move = child_action
+            best_win_rate = win_rate
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    return None
+    print("best move picked:", best_move)
+    return best_move

@@ -97,7 +97,7 @@ def backpropagate(node, won):
         node.visits = node.visits + 1
         if won:
             node.wins = node.wins + 1
-            print("Wins per node:", node)
+#            print("Wins per node:", node)
         node = node.parent
     pass
 
@@ -114,16 +114,15 @@ def think(board, state):
     """
     identity_of_bot = board.current_player(state)
     root_node = MCTSNode(parent=None, parent_action=None, action_list=board.legal_actions(state))
-    i = 0 # testing value for number of nodes
+    i = 0 
     while not board.is_ended(state):
         #print('state loop')
-        # Copy the game for sampling a playthrough
         sampled_game = state
 
         # Start at root
         node = root_node
         if (i > 50): # break from while loop if 50 rollouts are done
-            #print(node.tree_to_string(horizon=4))
+            print(node.tree_to_string(horizon=4))
             break
         new_node = traverse_nodes(node, board, sampled_game, identity_of_bot)
         #print('traversed')
