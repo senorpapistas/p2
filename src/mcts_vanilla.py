@@ -3,7 +3,7 @@ from mcts_node import MCTSNode
 from random import choice
 from math import sqrt, log
 
-num_nodes = 1000
+num_nodes = 1
 explore_faction = 2.
 
 def traverse_nodes(node, board, state, identity):
@@ -22,10 +22,13 @@ def traverse_nodes(node, board, state, identity):
         if node is None:
             return -1
         action = choice(node.untried_actions)
+#        print("Action is:", action)
+#        print("Bot number:", identity)
         state = board.next_state(state, action)
-        node = node.child_nodes[action]
+        if action is not None and node.child_nodes:
+            node = node.child_nodes[action]
     return node
-    pass
+    # pass
     # Hint: return leaf_node
 
 
@@ -73,6 +76,7 @@ def backpropagate(node, won):
         won:    An indicator of whether the bot won or lost the game.
 
     """
+    # root_node = MCTSNode(parent=None, parent_action=None, action_list=board.legal_actions(state))
     while node is not None:
         node.visits = node.visits + 1
         if won:
@@ -111,5 +115,5 @@ def think(board, state):
 
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    best_win_rate = max(root_node.child_nodes.values())
-    return best_win_rate
+    #best_winrate = max(root_node.child_nodes.values())
+    return new_node.parent_action

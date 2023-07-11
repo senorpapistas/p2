@@ -59,6 +59,8 @@ def rollout(board, state):
         state:  The state of the game.
 
     """
+    #Need to implement heuristic rollout here, base code from vanilla 
+    #Options are roulette selection, partial expansion (will insert more from lecture)
     while not board.is_ended(state):
         action = choice(board.legal_actions(state))
         state = board.next_state(state,action)
