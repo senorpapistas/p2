@@ -2,8 +2,12 @@
 from mcts_node import MCTSNode
 from random import choice
 from math import sqrt, log
+from timeit import default_timer as time
 
-num_nodes = 1
+# start = time 
+# time_elapsed = time() - start
+
+num_nodes = 1000 
 explore_faction = 2.
 
 def traverse_nodes(node, board, state, identity):
@@ -22,8 +26,8 @@ def traverse_nodes(node, board, state, identity):
         if node is None:
             return -1
         action = choice(node.untried_actions)
-#        print("Action is:", action)
-#        print("Bot number:", identity)
+        print("Action is:", action)
+        print("Bot number:", identity)
         state = board.next_state(state, action)
         if action is not None and node.child_nodes:
             node = node.child_nodes[action]
@@ -98,12 +102,13 @@ def think(board, state):
     identity_of_bot = board.current_player(state)
     root_node = MCTSNode(parent=None, parent_action=None, action_list=board.legal_actions(state))
 
-    while not board.is_ended(state):
+#    while not board.is_ended(state):
         # Copy the game for sampling a playthrough
-        sampled_game = state
+    sampled_game = state
 
         # Start at root
-        node = root_node
+    node = root_node
+    if node is not None:
         new_node = traverse_nodes(node, board, sampled_game, identity_of_bot)
         if len(new_node.untried_actions) > 0:
             new_node = expand_leaf(new_node, board, sampled_game)
@@ -115,5 +120,4 @@ def think(board, state):
 
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    #best_winrate = max(root_node.child_nodes.values())
     return new_node.parent_action
