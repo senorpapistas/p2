@@ -58,7 +58,10 @@ def expand_leaf(node, board, state):
     new_state = board.next_state(state, action)
     added_child = MCTSNode(parent = node, parent_action = action, action_list=board.legal_actions(new_state))
     node.child_nodes[action] = added_child
+#    print("Untried actions before:", node.untried_actions)
     node.untried_actions.remove(action)
+#    print("Untried actions after:", node.untried_actions)
+#    print("added child is:", added_child)
     return added_child
     pass
     # Hint: return new_node
@@ -74,7 +77,9 @@ def rollout(board, state):
     """
     while not board.is_ended(state):
         action = choice(board.legal_actions(state))
+#        print("Chosen action for rollout is :", action)
         state = board.next_state(state,action)
+#        print("Next state is :", state)
     return state
     pass
 
@@ -92,6 +97,7 @@ def backpropagate(node, won):
         node.visits = node.visits + 1
         if won:
             node.wins = node.wins + 1
+            print("Wins per node:", node)
         node = node.parent
     pass
 
@@ -128,11 +134,19 @@ def think(board, state):
         sampled_game = board.next_state(sampled_game, node.parent_action)
         rollout_rest = rollout(board, sampled_game)
         win_rate = board.points_values(rollout_rest)[identity_of_bot] == 1
-        #print('winrate', win_rate)
-        backpropagate(new_node, win_rate) 
+#        print('winrate', win_rate)
+        backpropagate(new_node, win_rate)
         i += 1
         # Do MCTS - This is all you!
-
+    best_move = None
+    best_win_rate = -1.0
+    for child_action, child_node in root_node.child_nodes.items():
+        win_rate = child_node.wins / child_node.visits
+        if win_rate > best_win_rate:
+            best_move = child_action
+            best_win_rate = win_rate
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    return new_node.parent_action
+    print("best move picked:", best_move)
+    return best_move
+
