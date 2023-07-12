@@ -1,0 +1,20 @@
+﻿Maladi 
+Nirupam Maladi and Ewin Matthew
+Professor Shapiro
+CMPM 146
+12 July 2023
+Experiment 2
+The modified version and vanilla versions of the bot have the same DNA in terms of how they are built on a fundamental level. They both employ very similar approaches to solving the problem of Ultimate Tic Tac Toe by using Monte Carlo Tree Search. Both of the programs use the same set of functions, with nearly identical logic when it comes to traverse nodes, expand_lead, backpropagate and think functions. The differences from the two programs is that the modified bot utilizes a basic heuristic in the rollout function. Specifically, the rollout function checks if a given action would allow one to capture more boxes and prioritize those actions over others if that is at all possible, leading to a more aggressive playstyle similar to the MixMax route that lets the algorithm think about the overall possible reward from going down a certain route. The graphs for the experiment are on the next page.
+  
+
+In the first experiment seen above, the Modified bot is able to beat the Vanilla bot in most of the games (45 vs 38) when the number of nodes traversed by each of the algorithms is set to 100. This gap would likely increase when more nodes are added for each of the algorithms to traverse, as the search space would be more dense for a heuristic approach to be able to pick the most viable solution as opposed to a more generic random approach used by the corresponding rollout algorithm that is implemented by the vanilla bot. 
+
+
+  
+
+The second trial yielded expected results as the difference between the bots did increase, the overall score of the bot ended up being (47 - 30 - 23) in favor of the modified bot. Suggesting that the modified bot was able to beat out the vanilla bot more frequently or manage to draw the game against it. I expect this gap to be more significant with more iterations allowed for the modified bot to use its heuristic. 
+
+
+  
+
+The final trial still led to the modified algorithm being able to beat the vanilla algorithm in most of the games but the difference wasn’t nearly as significant (45-34-21) as I had originally expected and hoped for. There might have been a larger correlation between the number of nodes that were used by the algorithm and the success of the bot but the algorithm simply took a significant amount of time to run in its entirety which forced me to scale down the size of the project to account for the given constraints.
