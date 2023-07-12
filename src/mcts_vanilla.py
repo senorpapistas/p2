@@ -7,7 +7,7 @@ from timeit import default_timer as time
 # start = time 
 # time_elapsed = time() - start
 
-num_nodes = 1000 
+num_nodes = 300 
 explore_faction = 2.
 
 def traverse_nodes(node, board, state, identity):

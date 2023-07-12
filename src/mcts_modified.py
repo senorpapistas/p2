@@ -3,7 +3,7 @@ from mcts_node import MCTSNode
 from random import choice
 from math import sqrt, log
 
-num_nodes = 1000
+num_nodes = 300
 explore_faction = 2.
 
 def traverse_nodes(node, board, state, identity):
@@ -20,17 +20,31 @@ def traverse_nodes(node, board, state, identity):
     """
     while node.child_nodes:
         tempstate = state
+        tempnode = choice(list(node.child_nodes.values()))
         if node is None:
             return -1
-        action = choice(list(node.child_nodes.keys()))
-        state = board.next_state(state, action)
+        for children in node.child_nodes.values():
+            if children.visits == 0:
+                if len(children.child_nodes) == 0:
+                    tempnode = children
+                    state = board.next_state(state, tempnode.parent_action)
+                    return tempnode
+                    break
+                pass
+            elif tempnode.visits == 0:
+                pass
+            else: 
+                if (children.wins/children.visits + explore_faction * sqrt(log(node.visits)/children.visits)) > (tempnode.wins/tempnode.visits + explore_faction * sqrt(log(node.visits)/tempnode.visits)):
+                    tempnode = children
+        state = board.next_state(state, tempnode.parent_action)
         if tempstate == state: 
+            print('broken')
             break
-        if action is not None and node.child_nodes:
-            node = node.child_nodes[action]
+        if tempnode.parent_action is not None and node.child_nodes:
+            node = node.child_nodes[tempnode.parent_action]
     return node
-    pass
     # Hint: return leaf_node
+
 
 
 def expand_leaf(node, board, state):
@@ -82,11 +96,6 @@ def rollout(board, state):
     return state 
 
 
-    
-    
-
-                  
-
 def backpropagate(node, won):
     """ Navigates the tree from a leaf node to the root, updating the win and visit count of each node along the path.
 
@@ -117,21 +126,30 @@ def think(board, state):
     identity_of_bot = board.current_player(state)
     root_node = MCTSNode(parent=None, parent_action=None, action_list=board.legal_actions(state))
     i = num_nodes # testing value for number of nodes
-    for i in range(num_nodes):
+    for step in range(num_nodes):
         # Copy the game for sampling a playthrough
         sampled_game = state
 
         # Start at root
         node = root_node
+        # if node is not None:
         new_node = traverse_nodes(node, board, sampled_game, identity_of_bot)
         child_node = new_node
-        if child_node.visits == 0:
-            while len(child_node.untried_actions) > 0:
-                new_node = expand_leaf(child_node, board, sampled_game)
-        sampled_game = board.next_state(sampled_game, new_node.parent_action)
-        rollout_rest = rollout(board, sampled_game)
-        win_rate = board.points_values(rollout_rest)[identity_of_bot] == 1
-        backpropagate(new_node, win_rate) 
+        if new_node.visits == 0 and i != num_nodes:
+            sampled_game = board.next_state(sampled_game, new_node.parent_action)
+            rollout_rest = rollout(board, sampled_game)
+            win_rate = board.points_values(rollout_rest)[identity_of_bot] == 1
+            backpropagate(new_node, win_rate) 
+
+        else:
+            while len(new_node.untried_actions) > 0:
+                child_node = expand_leaf(new_node, board, sampled_game)
+            sampled_game = board.next_state(sampled_game, child_node.parent_action)
+            rollout_rest = rollout(board, sampled_game)
+            win_rate = board.points_values(rollout_rest)[identity_of_bot] == 1
+            # print('points earned:', board.points_values(rollout_rest)[identity_of_bot])
+            # print('winrate', win_rate)
+            backpropagate(child_node, win_rate) 
         i -= 1
         # Do MCTS - This is all you!
 
@@ -140,7 +158,9 @@ def think(board, state):
 
     best_node = choice(list(root_node.child_nodes.values()))
     for children in root_node.child_nodes.values():
-        if (100*(children.wins)/(children.visits+1)) > (100*best_node.wins/(best_node.visits+1)):
+        #if (100*(children.wins)/(children.visits+1)) > (100*best_node.wins/(best_node.visits+1)):
+        if children.visits > best_node.visits:
             best_node = children
-    print('best node with winrate', 100*best_node.wins/(best_node.visits+1), 'is', best_node)
+    # print(root_node.tree_to_string(horizon=1))
+    # print('best node with winrate', 100*best_node.wins/(best_node.visits+1), 'is', best_node)
     return best_node.parent_action
