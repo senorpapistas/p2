@@ -1,0 +1,35 @@
+Experiment 1 - Tree Size
+
+The following experiment used 2 vanilla MCTS bots to test how tree size affected winrate.
+
+5 different tree sizes were used. 1 fixed tree size of 100 nodes was always player 1. Player 2's
+tree size was variable. The tree sizes used for player 2 were 50 nodes, 200 nodes, 500 nodes, and
+1000 nodes.
+
+The winrate of each tree size was compared in a bar graph created on google spreadsheets. This
+graph was uploaded into this folder as experiment1.png. The graph compares the 4 subexperiments
+and sees how the winrate differs between 100 vs 50 nodes, 100 vs 200 nodes, 100 vs 500 nodes, and
+100 vs 1000 nodes. For each subexperiment, p2_sim.py was used to run 100 games.
+
+For the 100 vs 50 nodes games, player 1 had won 40 games while player 2 had won 38 games. This
+also meant that they had drawn 22 times. What can be seen here is that although player 1 had
+double the amount of nodes, it did not help to gain a considerable lead above player 2.
+
+For the 100 vs 200 nodes games, player 1 had won 46 games while player 2 had won 33 games. This
+meant they had drawn 21 times. The first subexperiment was on track with something, however, this
+subexperiment disproves that. Player 2 had double the amount of nodes this time, with quadruple
+the amount of nodes it had from the previous subexperiment, but it still lost.
+
+For the 100 vs 500 nodes games, player 1 had won 46 games again, however player 2 had won 37 
+games this time. This meant they had drawn 17 times. Once again, even with over double the
+amount of nodes as the previous subexperiment, player 2 still lost.
+
+Finally, for the 100 vs 1000 nodes games, player 1 had won 42 games and player had won 37 games
+again. This meant they had drawn 21 times. For the final time, player 2 had lost with double the
+amount of nodes as the previous subexperiment.
+
+There are at least 2 possible reasons player 2 kept losing. 1 reason might be that the 1st player
+had an advantage going first and can draw/win more games than the other bot. The 2nd reason could
+just be that the implemented algorithm is just flawed. The number of nodes might not be too big
+of a factor as the selection of a path to take might be fundamentally flawed. Both of these would
+require much more testing to solve and might require function reworks.
