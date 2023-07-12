@@ -38,8 +38,12 @@ def traverse_nodes(node, board, state, identity):
             elif tempnode.visits == 0:
                 pass
             else: 
-                if (children.wins/children.visits + explore_faction * sqrt(log(node.visits)/children.visits)) > (tempnode.wins/tempnode.visits + explore_faction * sqrt(log(node.visits)/tempnode.visits)):
-                    tempnode = children
+                if (identity == 1):
+                    if (children.wins/children.visits + explore_faction * sqrt(log(node.visits)/children.visits)) > (tempnode.wins/tempnode.visits + explore_faction * sqrt(log(node.visits)/tempnode.visits)):
+                        tempnode = children
+                else: 
+                    if (1 - (children.wins/children.visits) + explore_faction * sqrt(log(node.visits)/children.visits)) > (1 - (tempnode.wins/tempnode.visits) + explore_faction * sqrt(log(node.visits)/tempnode.visits)):
+                        tempnode = children
         state = board.next_state(state, tempnode.parent_action)
         if tempstate == state: 
             print('broken')
