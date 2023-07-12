@@ -75,6 +75,7 @@ def rollout(board, state):
                 action = choice(board.legal_actions(state))
             elif action is not None:
                 action = choice(board.legal_actions(state))
+                
             
 #            print("state is :", state)
             state = board.next_state(state, action)
