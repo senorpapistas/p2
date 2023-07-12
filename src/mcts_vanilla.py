@@ -2,10 +2,7 @@
 from mcts_node import MCTSNode
 from random import choice
 from math import sqrt, log
-from timeit import default_timer as time
 
-# start = time 
-# time_elapsed = time() - start
 
 num_nodes = 1000 
 explore_faction = 2.
