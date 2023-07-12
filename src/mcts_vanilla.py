@@ -146,6 +146,6 @@ def think(board, state):
             best_win_rate = win_rate
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    print("best move picked:", best_move)
+    # print("best move picked:", best_move)
     return best_move
 
