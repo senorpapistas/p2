@@ -4,8 +4,7 @@ from random import choice
 from math import sqrt, log
 from timeit import default_timer as time
 
-# start = time 
-# time_elapsed = time() - start
+
 
 num_nodes = 300 
 explore_faction = 2.
